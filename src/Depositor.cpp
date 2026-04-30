@@ -1,14 +1,38 @@
 #include "Depositor.h"
 #include <iostream>
+#include <iomanip> // Для форматирования вывода
 
-Depositor::Depositor(long long accNum, std::string name, std::string passport, std::string category, double initialBalance) {
-    // Р РµР°Р»РёР·Р°С†РёСЋ РґРѕР±Р°РІРёРј РїРѕР·Р¶Рµ
+Depositor::Depositor(long long accNum, std::string name, std::string passport, std::string category, double initialBalance, std::string date)
+    : accountNumber(accNum), fullName(name), passportData(passport), depositCategory(category), balance(initialBalance), lastOperationDate(date) {}
+
+long long Depositor::getAccountNumber() const { return accountNumber; }
+std::string Depositor::getFullName() const { return fullName; }
+std::string Depositor::getPassportData() const { return passportData; }
+std::string Depositor::getDepositCategory() const { return depositCategory; }
+double Depositor::getBalance() const { return balance; }
+std::string Depositor::getLastOperationDate() const { return lastOperationDate; }
+
+void Depositor::deposit(double amount) {
+    if (amount > 0) {
+        balance += amount;
+    }
 }
 
-long long Depositor::getAccountNumber() const { return 0; } // Р—Р°РіР»СѓС€РєР°
-std::string Depositor::getFullName() const { return ""; } // Р—Р°РіР»СѓС€РєР°
-double Depositor::getBalance() const { return 0.0; } // Р—Р°РіР»СѓС€РєР°
+bool Depositor::withdraw(double amount) {
+    if (amount > 0 && amount <= balance) {
+        balance -= amount;
+        return true; // Снятие успешно
+    }
+    return false; // Недостаточно средств или некорректная сумма
+}
 
-void Depositor::deposit(double amount) {}
-void Depositor::withdraw(double amount) {}
-void Depositor::display() const {}
+void Depositor::display() const {
+    std::cout << "----------------------------------------" << std::endl;
+    std::cout << "Номер счета: " << accountNumber << std::endl;
+    std::cout << "ФИО: " << fullName << std::endl;
+    std::cout << "Паспорт: " << passportData << std::endl;
+    std::cout << "Категория вклада: " << depositCategory << std::endl;
+    std::cout << "Баланс: " << std::fixed << std::setprecision(2) << balance << " руб." << std::endl;
+    std::cout << "Дата последней операции: " << lastOperationDate << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+}
