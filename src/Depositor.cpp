@@ -1,6 +1,6 @@
 #include "Depositor.h"
 #include <iostream>
-#include <iomanip> // Для форматирования вывода
+#include <iomanip> 
 
 Depositor::Depositor(long long accNum, std::string name, std::string passport, std::string category, double initialBalance, std::string date)
     : accountNumber(accNum), fullName(name), passportData(passport), depositCategory(category), balance(initialBalance), lastOperationDate(date) {}
@@ -21,9 +21,9 @@ void Depositor::deposit(double amount) {
 bool Depositor::withdraw(double amount) {
     if (amount > 0 && amount <= balance) {
         balance -= amount;
-        return true; // Снятие успешно
+        return true; 
     }
-    return false; // Недостаточно средств или некорректная сумма
+    return false; 
 }
 
 void Depositor::display() const {

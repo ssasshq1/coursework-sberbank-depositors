@@ -9,6 +9,6 @@ private:
 public:
     void addDepositor(const Depositor& depositor);
     const std::vector<Depositor>& getAllDepositors() const;
-    // Метод для прямой замены всего вектора (нужен для загрузки из файла)
+    
     void setAllDepositors(const std::vector<Depositor>& newDepositors);
 };

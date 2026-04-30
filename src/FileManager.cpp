@@ -5,7 +5,7 @@
 void FileManager::saveToFile(const std::vector<Depositor>& depositors, const std::string& filename) const {
     std::ofstream file(filename);
     if (!file.is_open()) {
-        return; // Не удалось открыть файл
+        return; 
     }
 
     for (const auto& depositor : depositors) {
@@ -22,7 +22,7 @@ std::vector<Depositor> FileManager::loadFromFile(const std::string& filename) co
     std::vector<Depositor> depositors;
     std::ifstream file(filename);
     if (!file.is_open()) {
-        return depositors; // Файла нет, возвращаем пустой вектор
+        return depositors; 
     }
 
     std::string line;

@@ -13,7 +13,7 @@ private:
 public:
     Depositor(long long accNum, std::string name, std::string passport, std::string category, double initialBalance, std::string date);
 
-    // Геттеры
+   
     long long getAccountNumber() const;
     std::string getFullName() const;
     std::string getPassportData() const;
@@ -21,8 +21,8 @@ public:
     double getBalance() const;
     std::string getLastOperationDate() const;
 
-    // Методы
+    
     void deposit(double amount);
-    bool withdraw(double amount); // Будет возвращать true/false в зависимости от успеха
+    bool withdraw(double amount); 
     void display() const;
 };

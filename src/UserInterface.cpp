@@ -1,6 +1,6 @@
 #include "UserInterface.h"
 #include <iostream>
-#include <limits> // Для очистки буфера ввода
+#include <limits> 
 
 UserInterface::UserInterface(DepositorRepository& repo) : repository(repo) {}
 
@@ -8,7 +8,6 @@ void UserInterface::displayMainMenu() const {
     std::cout << "\n--- Главное меню ---" << std::endl;
     std::cout << "1. Добавить нового вкладчика" << std::endl;
     std::cout << "2. Показать всех вкладчиков" << std::endl;
-    // Другие пункты будут здесь
     std::cout << "0. Выход и сохранение" << std::endl;
     std::cout << "Выберите опцию: ";
 }
@@ -17,33 +16,33 @@ void UserInterface::handleAddDepositor() {
     long long accNum;
     std::string name, passport, category, date;
     double balance;
-    std::string input; // Вспомогательная строка для чтения всего ввода
+    std::string input; 
 
     std::cout << "--- Добавление нового вкладчика ---" << std::endl;
 
-    // Читаем все как строку, а потом конвертируем в число. Это надежно!
+    
     std::cout << "Введите номер счета: ";
     std::getline(std::cin, input);
     try {
-        accNum = std::stoll(input); // stoll = string to long long
+        accNum = std::stoll(input); 
     } catch (const std::invalid_argument& e) {
         std::cout << "Ошибка: номер счета должен быть числом." << std::endl;
         return;
     }
 
     std::cout << "Введите ФИО: ";
-    std::getline(std::cin, name); // getline идеально подходит для строк с пробелами
+    std::getline(std::cin, name); 
 
     std::cout << "Введите паспортные данные: ";
     std::getline(std::cin, passport);
 
     std::cout << "Введите категорию вклада: ";
-    std::getline(std::cin, category); // И здесь тоже
+    std::getline(std::cin, category); 
 
     std::cout << "Введите начальный баланс: ";
     std::getline(std::cin, input);
     try {
-        balance = std::stod(input); // stod = string to double
+        balance = std::stod(input); 
     } catch (const std::invalid_argument& e) {
         std::cout << "Ошибка: баланс должен быть числом." << std::endl;
         return;
@@ -92,7 +91,7 @@ void UserInterface::run() {
             break;
         case 0:
             std::cout << "Сохранение данных и выход..." << std::endl;
-            break; // Выходим из цикла
+            break; 
         default:
             if(choice != -1) std::cout << "Неверный выбор. Попробуйте снова." << std::endl;
         }
