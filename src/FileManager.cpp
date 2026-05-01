@@ -4,9 +4,7 @@
 
 void FileManager::saveToFile(const std::vector<Depositor>& depositors, const std::string& filename) const {
     std::ofstream file(filename);
-    if (!file.is_open()) {
-        return; 
-    }
+    if (!file.is_open()) return;
 
     for (const auto& depositor : depositors) {
         file << depositor.getAccountNumber() << ";"
@@ -21,15 +19,12 @@ void FileManager::saveToFile(const std::vector<Depositor>& depositors, const std
 std::vector<Depositor> FileManager::loadFromFile(const std::string& filename) const {
     std::vector<Depositor> depositors;
     std::ifstream file(filename);
-    if (!file.is_open()) {
-        return depositors; 
-    }
+    if (!file.is_open()) return depositors;
 
     std::string line;
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string item;
-
         long long accNum;
         std::string name, passport, category, date;
         double balance;
@@ -45,6 +40,5 @@ std::vector<Depositor> FileManager::loadFromFile(const std::string& filename) co
 
         depositors.emplace_back(accNum, name, passport, category, balance, date);
     }
-
     return depositors;
 }

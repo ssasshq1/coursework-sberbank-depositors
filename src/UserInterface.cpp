@@ -1,6 +1,7 @@
 #include "UserInterface.h"
 #include <iostream>
-#include <limits> 
+#include <string>
+#include <limits>
 
 UserInterface::UserInterface(DepositorRepository& repo) : repository(repo) {}
 
@@ -16,38 +17,25 @@ void UserInterface::handleAddDepositor() {
     long long accNum;
     std::string name, passport, category, date;
     double balance;
-    std::string input; 
 
     std::cout << "--- Добавление нового вкладчика ---" << std::endl;
-
-    
     std::cout << "Введите номер счета: ";
-    std::getline(std::cin, input);
-    try {
-        accNum = std::stoll(input); 
-    } catch (const std::invalid_argument& e) {
-        std::cout << "Ошибка: номер счета должен быть числом." << std::endl;
-        return;
-    }
+    std::cin >> accNum;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
 
     std::cout << "Введите ФИО: ";
-    std::getline(std::cin, name); 
+    std::getline(std::cin, name);
 
     std::cout << "Введите паспортные данные: ";
     std::getline(std::cin, passport);
 
     std::cout << "Введите категорию вклада: ";
-    std::getline(std::cin, category); 
+    std::getline(std::cin, category);
 
     std::cout << "Введите начальный баланс: ";
-    std::getline(std::cin, input);
-    try {
-        balance = std::stod(input); 
-    } catch (const std::invalid_argument& e) {
-        std::cout << "Ошибка: баланс должен быть числом." << std::endl;
-        return;
-    }
-    
+    std::cin >> balance;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     std::cout << "Введите дату открытия (ДД.ММ.ГГГГ): ";
     std::getline(std::cin, date);
 
@@ -68,19 +56,19 @@ void UserInterface::handleViewAllDepositors() const {
 }
 
 void UserInterface::run() {
-    int choice = -1;
-    std::string input;
-
-    while (choice != 0) {
+    int choice;
+    do {
         displayMainMenu();
-        std::getline(std::cin, input); 
+        std::cin >> choice;
 
-        try {
-            choice = std::stoi(input); 
-        } catch (const std::invalid_argument& e) {
-            std::cout << "Ошибка: введите число." << std::endl;
-            choice = -1; 
+        if (std::cin.fail()) {
+             std::cout << "Ошибка: введите число." << std::endl;
+             std::cin.clear();
+             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+             choice = -1; 
+             continue;
         }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
         case 1:
@@ -90,10 +78,9 @@ void UserInterface::run() {
             handleViewAllDepositors();
             break;
         case 0:
-            std::cout << "Сохранение данных и выход..." << std::endl;
-            break; 
+            break;
         default:
-            if(choice != -1) std::cout << "Неверный выбор. Попробуйте снова." << std::endl;
+            std::cout << "Неверный выбор. Попробуйте снова." << std::endl;
         }
-    }
+    } while (choice != 0);
 }
