@@ -1,4 +1,5 @@
 #include "UserInterface.h"
+#include "Logger.h"
 #include <iostream>
 #include <string>
 #include <limits>
@@ -9,6 +10,7 @@ void UserInterface::displayMainMenu() const {
     std::cout << "\n--- Главное меню ---" << std::endl;
     std::cout << "1. Добавить нового вкладчика" << std::endl;
     std::cout << "2. Показать всех вкладчиков" << std::endl;
+    std::cout << "3. Найти вкладчика и провести операции" << std::endl;
     std::cout << "0. Выход и сохранение" << std::endl;
     std::cout << "Выберите опцию: ";
 }
@@ -40,6 +42,7 @@ void UserInterface::handleAddDepositor() {
     std::getline(std::cin, date);
 
     repository.addDepositor(Depositor(accNum, name, passport, category, balance, date));
+    Logger::log("Добавлен новый вкладчик. Счет: " + std::to_string(accNum));
     std::cout << "Вкладчик успешно добавлен!" << std::endl;
 }
 
@@ -55,6 +58,65 @@ void UserInterface::handleViewAllDepositors() const {
     }
 }
 
+void UserInterface::handleFindDepositor() {
+    long long accNum;
+    std::cout << "Введите номер счета для поиска: ";
+    std::cin >> accNum;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    Depositor* depositor = repository.findDepositor(accNum);
+
+    if (depositor != nullptr) {
+        std::cout << "Вкладчик найден:" << std::endl;
+        depositor->display();
+        performOperations(depositor);
+    } else {
+        Logger::log("Ошибка: попытка найти несуществующий счет " + std::to_string(accNum));
+        std::cout << "Вкладчик с таким номером счета не найден." << std::endl;
+    }
+}
+
+void UserInterface::performOperations(Depositor* depositor) {
+    int choice;
+    do {
+        std::cout << "\n--- Меню операций со счетом " << depositor->getAccountNumber() << " ---" << std::endl;
+        std::cout << "1. Пополнить счет" << std::endl;
+        std::cout << "2. Снять со счета" << std::endl;
+        std::cout << "0. Вернуться в главное меню" << std::endl;
+        std::cout << "Выберите опцию: ";
+        std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        double amount;
+        switch (choice) {
+        case 1:
+            std::cout << "Введите сумму для пополнения: ";
+            std::cin >> amount;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            depositor->deposit(amount);
+            Logger::log("Счет " + std::to_string(depositor->getAccountNumber()) + " пополнен на " + std::to_string(amount));
+            std::cout << "Счет пополнен. Новый баланс: " << depositor->getBalance() << std::endl;
+            break;
+        case 2:
+            std::cout << "Введите сумму для снятия: ";
+            std::cin >> amount;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            if (depositor->withdraw(amount)) {
+                Logger::log("Со счета " + std::to_string(depositor->getAccountNumber()) + " снято " + std::to_string(amount));
+                std::cout << "Сумма снята. Новый баланс: " << depositor->getBalance() << std::endl;
+            } else {
+                Logger::log("Ошибка: недостаточно средств на счете " + std::to_string(depositor->getAccountNumber()) + " для снятия " + std::to_string(amount));
+                std::cout << "Недостаточно средств на счете." << std::endl;
+            }
+            break;
+        case 0:
+            break;
+        default:
+            std::cout << "Неверный выбор." << std::endl;
+        }
+    } while (choice != 0);
+}
+
 void UserInterface::run() {
     int choice;
     do {
@@ -65,10 +127,13 @@ void UserInterface::run() {
              std::cout << "Ошибка: введите число." << std::endl;
              std::cin.clear();
              std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-             choice = -1; 
+             choice = -1;
              continue;
         }
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        // Очищаем буфер после cin >> choice, чтобы getline работал правильно в handleAddDepositor
+        if (choice != 0) { // Если не выход, то скорее всего будет еще ввод
+             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
 
         switch (choice) {
         case 1:
@@ -76,6 +141,9 @@ void UserInterface::run() {
             break;
         case 2:
             handleViewAllDepositors();
+            break;
+        case 3:
+            handleFindDepositor();
             break;
         case 0:
             break;

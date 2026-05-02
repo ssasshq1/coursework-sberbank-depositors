@@ -11,3 +11,13 @@ const std::vector<Depositor>& DepositorRepository::getAllDepositors() const {
 void DepositorRepository::setAllDepositors(const std::vector<Depositor>& newDepositors) {
     depositors = newDepositors;
 }
+
+// Добавлена реализация метода поиска
+Depositor* DepositorRepository::findDepositor(long long accountNumber) {
+    for (auto& depositor : depositors) {
+        if (depositor.getAccountNumber() == accountNumber) {
+            return &depositor;
+        }
+    }
+    return nullptr;
+}

@@ -9,6 +9,8 @@ private:
 public:
     void addDepositor(const Depositor& depositor);
     const std::vector<Depositor>& getAllDepositors() const;
-    
     void setAllDepositors(const std::vector<Depositor>& newDepositors);
+    
+    // Добавлен метод поиска
+    Depositor* findDepositor(long long accountNumber);
 };
